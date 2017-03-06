@@ -1,0 +1,3 @@
+; this should cause a parese error
+(begin
+(define a 1)

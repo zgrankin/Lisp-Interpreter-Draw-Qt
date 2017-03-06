@@ -1,0 +1,4 @@
+*.vts binary
+*.vts.expected binary
+
+*.sh eol=lf

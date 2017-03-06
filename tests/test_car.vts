@@ -1,0 +1,19 @@
+; draw a car
+(begin
+ (define front_wheel (arc (point -50 10) (point -50 0) (* 2 pi)))
+ (define back_wheel (arc (point 50 10) (point 50 0) (* 2 pi)))
+ (draw front_wheel back_wheel)
+ (draw (line (point -36 10) (point 36 10) ))
+ (draw (arc (point -50 10) (point -36 10) pi))
+ (draw (arc (point 50 10) (point 36 10) (- pi)))
+ (draw (line (point 64 10) (point 80 10)))
+ (draw (line (point -64 10) (point -80 10)))
+ (draw
+  (arc (point 30 10) (point 80 10) (/ pi 2))
+  (line (point 30 -40) (point -20 -40))
+  (line (point -20 -40) (point -40 -20))
+  (line (point -80 -15) (point -40 -20))
+  (arc (point -80 (/ -6 2)) (point -80 -15) pi)
+  )
+)
+

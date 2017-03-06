@@ -1,0 +1,6 @@
+(begin
+(define a (point 0 0))
+(define b (point 100 -10))
+(draw (line a b))
+(draw (arc a b pi))
+)
