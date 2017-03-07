@@ -69,13 +69,25 @@ class TestExecuteCommandline(unittest.TestCase):
 
 class TestExecuteFromFile(unittest.TestCase):
 		
-	def test_sub(self):
+	def test_file(self):
 		args = ' /vagrant/tests/test3.vts'
 		(output, retcode) = pexpect.run(cmd+args, withexitstatus=True, extra_args=args)
 		self.assertEqual(retcode, 0)
 		self.assertEqual(output.strip(), b"(2)")
 
-	def test_error(self):
+	def test_file_lf(self):
+		args = ' /vagrant/tests/test4.vts'
+		(output, retcode) = pexpect.run(cmd+args, withexitstatus=True, extra_args=args)
+		self.assertEqual(retcode, 0)
+		self.assertEqual(output.strip(), b"(-1)")
+
+	def test_file_crlf(self):
+		args = ' /vagrant/tests/test_crlf.vts'
+		(output, retcode) = pexpect.run(cmd+args, withexitstatus=True, extra_args=args)
+		self.assertEqual(retcode, 0)
+		self.assertEqual(output.strip(), b"(-1)")
+
+	def test_file_error(self):
 		args = ' /there/is/no/such/file'
 		(output, retcode) = pexpect.run(cmd+args, withexitstatus=True, extra_args=args)
 		self.assertNotEqual(retcode, 0)

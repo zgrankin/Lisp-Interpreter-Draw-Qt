@@ -2,7 +2,10 @@ $bootstrap = <<BOOTSTRAP
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get -y install build-essential
-apt-get -y install cmake valgrind lcov gcovr clang-tidy
+apt-get -y install cmake valgrind lcov clang-tidy
+apt-get -y install python3-pip
+pip3 install pexpect
+pip3 install gcovr
 apt-get -y install xorg
 apt-get -y install nodm
 apt-get -y install virtualbox-guest-dkms 
