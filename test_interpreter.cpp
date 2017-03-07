@@ -336,6 +336,29 @@ TEST_CASE( "Test logical procedures", "[interpreter]" ) {
   REQUIRE(run("(or True True False)") == Expression(true));
 }
 
+TEST_CASE( "Test trig procedures", "[interpreter]" ) {
+
+  REQUIRE(run("(sin pi)") == Expression(0.));
+  REQUIRE(run("(cos pi)") == Expression(-1.));
+  REQUIRE(run("(arctan 1 0)") == Expression(atan2(1,0)));
+
+  std::vector<std::string> programs = {"(sin 0 1)",
+				       "(cos 0 1)", 
+				       "(arctan 0)",
+				       "(sin True)",
+				       "(cos True)",
+				       "(arctan 1 False)"};
+  for(auto s : programs){
+    Interpreter interp;
+   
+    std::istringstream iss(s);
+    
+    REQUIRE(interp.parse(iss));
+    
+    REQUIRE_THROWS_AS(interp.eval(), InterpreterSemanticError);
+  }
+}
+
 TEST_CASE( "Test some semantically invalid expresions", "[interpreter]" ) {
   
   std::vector<std::string> programs = {"(@ none)", // so such procedure
@@ -352,6 +375,37 @@ TEST_CASE( "Test some semantically invalid expresions", "[interpreter]" ) {
 
       REQUIRE_THROWS_AS(interp.eval(), InterpreterSemanticError);
     }
+}
+
+TEST_CASE("Test graphic types", "[interpreter]") {
+
+  {
+    std::string program = "(point 0 0)";
+    std::istringstream iss(program);
+    Interpreter interp;
+
+    REQUIRE(interp.parse(iss));
+    REQUIRE(interp.eval() == Expression(std::make_tuple(0., 0.)));
+  }
+  {
+    std::string program = "(line (point 0 0) (point 10 0))";
+    std::istringstream iss(program);
+    Interpreter interp;
+
+    REQUIRE(interp.parse(iss));
+    REQUIRE(interp.eval() ==
+            Expression(std::make_tuple(0., 0.), std::make_tuple(10., 0.)));
+  }
+  {
+    std::string program = "(arc (point 0 0) (point 10 0) pi)";
+    std::istringstream iss(program);
+    Interpreter interp;
+
+    REQUIRE(interp.parse(iss));
+    REQUIRE(interp.eval() == Expression(std::make_tuple(0., 0.),
+                                        std::make_tuple(10., 0.),
+                                        atan2(0, -1)));
+  }
 }
 
 TEST_CASE( "Test file tests/test0.vts", "[interpreter]" ) {
