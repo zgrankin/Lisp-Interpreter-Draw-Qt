@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QVector>
+#include <QKeyEvent>
 
 class QLineEdit;
 class QLabel;
@@ -13,7 +14,7 @@ class REPLWidget : public QWidget {
 Q_OBJECT
 
 protected:
-	//void keyPressEvent(QKeyEvent *e);
+	void keyPressEvent(QKeyEvent *e);
 
 public:
 	// Default construct a REPLWidget
@@ -26,13 +27,13 @@ signals:
 
 private slots:
 	void replSignalHold();
-	void keyPressSignalHold();
 
 private:
 	QLineEdit * replBox;
 	QLabel * replLabel;
 
 	QVector<QString> history;
+	std::size_t historyPosition;
 };
 
 #endif

@@ -2,11 +2,15 @@
 
 #include <QLineEdit>
 #include <QLabel>
+#include <QWidget>
 #include <QLayout>
+#include <QKeyEvent>
 #include <iostream>
 
-REPLWidget::REPLWidget(QWidget * parent)
+REPLWidget::REPLWidget(QWidget * parent) : QWidget(parent)
 {
+	history.push_back("");
+	historyPosition = 0;
 	replBox = new QLineEdit(this);
 	replLabel = new QLabel("vtscript> ", this);
 
@@ -23,17 +27,26 @@ REPLWidget::REPLWidget(QWidget * parent)
 void REPLWidget::replSignalHold()
 {
 	emit lineEntered(replBox->text());
-	history.push_back(replBox->text());
+	history.insert(1, replBox->text());
+	historyPosition = 0;
 	replBox->clear();
 }
 
-void REPLWidget::keyPressSignalHold()
-{
-	std::cout << "Key event grabbed";
-}
 
-void keyPressEvent(QKeyEvent *e)
+void REPLWidget::keyPressEvent(QKeyEvent *e)
 {
 	// Otherwise pass to the graphics view
-	//QGraphicsView::keyPressEvent(e)
+	if (e->key() == 0x01000013 && historyPosition < history.size()) { // up key Qt::Key_Up
+		if (historyPosition != history.size() - 1)
+			historyPosition++;
+		replBox->clear();
+		replBox->setText(history[historyPosition]);
+	}
+	else if (e->key() == 0x01000015 && historyPosition < history.size()) { // down key Qt::Key_Down
+		if (historyPosition > 0)
+			historyPosition--;
+		replBox->clear();
+		replBox->setText(history[historyPosition]);		
+	}
+	QWidget::keyPressEvent(e);
 }
