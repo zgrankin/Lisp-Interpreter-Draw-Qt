@@ -203,7 +203,17 @@ void Expression::defineMethod()
 			euthanizeChildren();
 		}
 		else if (atom.var == "arc") {
-			atom.atomType = ArcType;
+			if (children.size() == 3 && children[0]->atom.atomType == PointType && children[1]->atom.atomType == PointType && children[2]->atom.atomType == NumberType)
+			{
+				atom.point = children[0]->atom.point;
+				atom.point2 = children[1]->atom.point;
+				atom.number = children[2]->atom.number;
+				atom.atomType = ArcType;
+				if (parent != nullptr && parent->atom.var == "draw")
+					environment->graphics.push_back(atom);
+			}
+			else
+				throw InterpreterSemanticError("Error: Improper arguments for making a line.");
 			euthanizeChildren();
 		}
 		//

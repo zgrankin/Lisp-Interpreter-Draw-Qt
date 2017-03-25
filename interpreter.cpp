@@ -84,6 +84,19 @@ string Interpreter::expressionToString(Expression result)
 		ss4 << get<1>(result.atom.point2);
 		output = "((" + ss.str() + "," + ss2.str() + ")" + ",(" + ss3.str() + "," + ss4.str() + "))";
 	}
+	else if (result.atom.atomType == ArcType) {
+		std::stringstream ss;
+		std::stringstream ss2;
+		std::stringstream ss3;
+		std::stringstream ss4;
+		std::stringstream ss5;
+		ss << get<0>(result.atom.point);
+		ss2 << get<1>(result.atom.point);
+		ss3 << get<0>(result.atom.point2);
+		ss4 << get<1>(result.atom.point2);
+		ss5 << result.atom.number;
+		output = "((" + ss.str() + "," + ss2.str() + ")" + ",(" + ss3.str() + "," + ss4.str() + ") " + ss5.str() + ")";
+	}
 
 	else if (result.atom.atomType == BoolType) {
 		if (result.atom.truthValue == true) {
