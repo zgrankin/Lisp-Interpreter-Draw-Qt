@@ -21,7 +21,7 @@ CanvasWidget::CanvasWidget(QWidget * parent)
 
 void CanvasWidget::addGraphic(QGraphicsItem * item)
 {
-
+	scene->addItem(item);
 }
 
 

@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget * parent) {
 	QObject::connect(replDisplay, SIGNAL(lineEntered(QString)), intercept, SLOT(parseAndEvaluate(QString)));
 	QObject::connect(intercept, SIGNAL(info(QString)), messageDisplay, SLOT(info(QString)));
 	QObject::connect(intercept, SIGNAL(error(QString)), messageDisplay, SLOT(error(QString)));
+	QObject::connect(intercept, SIGNAL(drawGraphic(QGraphicsItem *)), canvasDisplay, SLOT(addGraphic(QGraphicsItem *)));
 
 
 }

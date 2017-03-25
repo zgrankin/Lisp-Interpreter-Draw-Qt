@@ -76,6 +76,8 @@ bool Tokenize::buildAST(vector<string> token)
 
 		if (rightCount > leftCount)
 			return false;
+		if (leftCount == rightCount && i != token.size() - 1)
+			return false;
 	}
 
 	if (leftCount != rightCount)
@@ -158,7 +160,7 @@ bool Tokenize::buildAST(vector<string> token)
 							negCount++;
 						else if (i > 0 && i != token[pos].size() - 1 && token[pos][i] == 'e' && token[pos][i - 1] != '-')
 							eCount++;
-						else if ((i > 0 && token[pos][i] == '.' && isdigit(token[pos][i - 1]) && eCount == 0 && isdigit(token[pos][i + 1])) ||
+						else if ((i > 0 && token[pos][i] == '.' && isdigit(token[pos][i - 1]) && eCount == 0 && ( isdigit(token[pos][i + 1]) || token[pos][i+1] == NULL) ) ||
 							(i == 0 && token[pos].size() >= 1 && token[pos][i] == '.' && isdigit(token[pos][i + 1])))
 							decimalCount++;
 						else

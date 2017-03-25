@@ -23,10 +23,11 @@ public:
 
 	string expressionToString(Expression result);
 
+	Environment theEnvironment;
+
 private:
 	Tokenize tree;
 	Expression expression;
-	Environment theEnvironment;
 
 	string streamToString(std::istream &expression);
 

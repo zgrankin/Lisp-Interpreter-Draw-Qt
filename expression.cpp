@@ -37,6 +37,27 @@ Expression::Expression(const std::string & value)
 	atom.var = value;
 }
 
+Expression::Expression(std::tuple<double, double> value)
+{
+	atom.atomType = PointType;
+	atom.point = value;
+}
+
+Expression::Expression(std::tuple<double, double> start, std::tuple<double, double> end)
+{
+	atom.atomType = LineType;
+	atom.point = start;
+	atom.point2 = end;
+}
+
+Expression::Expression(std::tuple<double, double> center, std::tuple<double, double> start, double angle)
+{
+	atom.atomType = ArcType;
+	atom.point = center;
+	atom.point2 = start;
+	atom.number = angle;
+}
+
 void Expression::defineMethod()
 {
 		if (atom.var == "+" && children.size() != 0) {
@@ -357,19 +378,23 @@ void Expression::outputFinalAnswer()
 bool Expression::operator==(const Expression & exp) const noexcept
 {
 	if (atom.atomType == exp.atom.atomType && atom.atomType == BoolType)
-	{
 		return (atom.truthValue == exp.atom.truthValue && children.size() == exp.children.size());
-	}
 
 	else if (atom.atomType == exp.atom.atomType && atom.atomType == NumberType)
-	{
 		return (atom.number == exp.atom.number && children.size() == exp.children.size());
-	}
 
 	else if (atom.atomType == exp.atom.atomType && atom.atomType == SymbolType)
-	{
 		return (atom.var == exp.atom.var && children.size() == exp.children.size());
-	}
+
+	else if (atom.atomType == exp.atom.atomType && atom.atomType == PointType)
+		return (atom.point == exp.atom.point && children.size() == exp.children.size());
+
+	else if (atom.atomType == exp.atom.atomType && atom.atomType == LineType)
+		return (atom.point == exp.atom.point && atom.point2 == exp.atom.point2 && children.size() == exp.children.size());
+
+	else if (atom.atomType == exp.atom.atomType && atom.atomType == ArcType)
+		return (atom.point == exp.atom.point && atom.point2 == exp.atom.point2 && atom.number == exp.atom.number &&
+			children.size() == exp.children.size());
 
 	return false;
 }
