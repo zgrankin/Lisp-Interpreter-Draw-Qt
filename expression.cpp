@@ -175,6 +175,38 @@ void Expression::defineMethod()
 
 			euthanizeChildren();
 		}
+		// project 2
+		else if (atom.var == "point") {
+			if (children.size() == 2 && children[0]->atom.atomType == NumberType && children[1]->atom.atomType == NumberType)
+			{
+				atom.point = make_tuple(children[0]->atom.number, children[1]->atom.number);
+				atom.atomType = PointType;
+				if (parent != nullptr && parent->atom.var == "draw")
+					environment->graphics.push_back(atom);
+			}
+			else
+				throw InterpreterSemanticError("Error: Improper arguments for making a point.");
+
+			euthanizeChildren();
+		}
+		else if (atom.var == "line") {
+			if (children.size() == 2 && children[0]->atom.atomType == PointType && children[1]->atom.atomType == PointType)
+			{
+				atom.point = children[0]->atom.point;
+				atom.point2 = children[1]->atom.point;
+				atom.atomType = LineType;
+				if (parent != nullptr && parent->atom.var == "draw")
+					environment->graphics.push_back(atom);
+			}
+			else
+				throw InterpreterSemanticError("Error: Improper arguments for making a line.");
+			euthanizeChildren();
+		}
+		else if (atom.var == "arc") {
+			atom.atomType = ArcType;
+			euthanizeChildren();
+		}
+		//
 		else if (atom.atomType == SymbolType)
 		{
 			atom = environment->findVar(atom.var);
@@ -242,12 +274,42 @@ Expression Expression::evaluateTree()
 				euthanizeChildren();
 			}
 		}
+
 		else {
 			throw InterpreterSemanticError("Error: Cannot evaluate. First expression of \"if\" did not return a bool type.");
 		}
 	}
 
-	else// if (atom.atomType == SymbolType)
+	else if (atom.var == "draw") {
+		if (children.size() == 0)
+			throw InterpreterSemanticError("Error: Cannot evaluate.");
+
+		for (unsigned int i = 0; i < children.size(); i++) {
+			if (children[i]->atom.atomType != PointType && children[i]->atom.atomType != LineType && children[i]->atom.atomType != ArcType) 
+			{
+				euthanizeChildren();
+				throw InterpreterSemanticError("Error: Cannot evaluate.");
+			}
+		}
+
+		for (unsigned int i = 0; i < children.size(); i++) {
+			if (children[i]->atom.atomType == PointType || children[i]->atom.atomType == LineType || children[i]->atom.atomType == ArcType) {
+				children[i]->evaluateTree();
+			}
+			else {
+				euthanizeChildren();
+				throw InterpreterSemanticError("Error: Cannot evaluate.");
+			}
+		}
+
+		atom.atomType = NoneType;
+		atom.var = "None";
+		atom.point = children[0]->atom.point;
+
+		euthanizeChildren();
+	}
+
+	else// if (atom.atomType == SymbolType) or point or arc or line
 	{
 		for (unsigned int i = 0; i < children.size(); i++){
 			children[i]->evaluateTree();
@@ -303,7 +365,6 @@ bool Expression::operator==(const Expression & exp) const noexcept
 }
 
 void Expression::euthanizeChildren() {
-	//(begin (define r 10) (* pi (* r r)))
 	while (!children.empty()) {
 		delete children[0];
 		children.erase(children.begin());

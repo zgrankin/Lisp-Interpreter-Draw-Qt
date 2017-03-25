@@ -188,6 +188,16 @@ bool Tokenize::buildAST(vector<string> token)
 		{
 			if (token[pos] == "True" || token[pos] == "False")
 				currentState = stateD;
+			else if (token[pos] == "point" || token[pos] == "line" || token[pos] == "arc")
+			{
+				tail->atom.atomType = token[pos] == "point" ? PointType :
+									  token[pos] == "line" ? LineType :
+									  ArcType;
+				
+				tail->atom.var = token[pos];
+				pos++;
+				currentState = stateA;
+			}
 			else if (token[pos][0] == '-' && isdigit(token[pos][1]))
 				currentState = stateE;
 			else if (!isdigit(token[pos][0])) {

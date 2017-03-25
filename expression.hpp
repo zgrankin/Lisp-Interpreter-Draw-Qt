@@ -3,12 +3,16 @@
 
 #include <string>
 #include <vector>
+#include <tuple>
+#include <functional>
 #include "interpreter_semantic_error.hpp"
 
 using std::vector;
 using std::string;
+using std::tuple;
+using std::make_tuple;
 
-enum VariantType { NoneType, BoolType, NumberType, SymbolType };
+enum VariantType { NoneType, BoolType, NumberType, SymbolType, PointType, LineType, ArcType };
 
 class Environment;
 
@@ -17,6 +21,9 @@ struct Atom {
 	double number;
 	bool truthValue;
 	string var;
+
+	tuple<double, double> point;
+	tuple<double, double> point2;
 };
 
 class Expression

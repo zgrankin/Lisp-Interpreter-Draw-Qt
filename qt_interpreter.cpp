@@ -1,5 +1,6 @@
 #include "interpreter.hpp"
 #include "qt_interpreter.hpp"
+#include "interpreter_semantic_error.hpp"
 
 #include <string>
 using std::string;
@@ -17,15 +18,13 @@ void QtInterpreter::parseAndEvaluate(QString entry)
 	if (parse == true) {
 		try {
 			evaluatedExpression = vtscript.expressionToString(vtscript.eval());
+			emit info(QString(evaluatedExpression.c_str()));
 		}
-		catch (InterpreterSemanticError) {
+		catch (InterpreterSemanticError  &e) {
 			emit error(QString("Error: could not evaluate expression."));
-		}
-
-		emit info(QString(evaluatedExpression.c_str()));
+		}		
 	}
 	else {
-		evaluatedExpression = "Error: Could not parse input.";
-		emit error(QString("Error: could not parse input."));
+		emit error(QString("Error: Could not parse input."));
 	}
 }

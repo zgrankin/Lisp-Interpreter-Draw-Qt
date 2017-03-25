@@ -1,6 +1,10 @@
 #include "interpreter.hpp"
 #include "environment.hpp"
 
+#include <tuple>
+
+using std::get;
+
 Interpreter::Interpreter()
 {
 	tree.environment = &theEnvironment;
@@ -58,8 +62,27 @@ string Interpreter::expressionToString(Expression result)
 		output = "(" + ss.str() + ")";
 	}
 
-	else if (result.atom.atomType == SymbolType) {
+	else if (result.atom.atomType == SymbolType || result.atom.atomType == NoneType) {
 		output = "(" + result.atom.var + ")";
+	}
+
+	else if (result.atom.atomType == PointType) {
+		std::stringstream ss;
+		std::stringstream ss2;
+		ss << get<0>(result.atom.point);
+		ss2 << get<1>(result.atom.point);
+		output = "(" + ss.str() + "," + ss2.str() + ")";
+	}
+	else if (result.atom.atomType == LineType) {
+		std::stringstream ss;
+		std::stringstream ss2;
+		std::stringstream ss3;
+		std::stringstream ss4;
+		ss << get<0>(result.atom.point);
+		ss2 << get<1>(result.atom.point);
+		ss3 << get<0>(result.atom.point2);
+		ss4 << get<1>(result.atom.point2);
+		output = "((" + ss.str() + "," + ss2.str() + ")" + ",(" + ss3.str() + "," + ss4.str() + "))";
 	}
 
 	else if (result.atom.atomType == BoolType) {

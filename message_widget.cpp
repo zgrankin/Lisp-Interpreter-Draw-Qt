@@ -34,8 +34,10 @@ void MessageWidget::info(QString message)
 
 void MessageWidget::error(QString message)
 {
+	string hello;
+	hello = message.toStdString();
 	messageBox->clear();
 	messageBox->insert(message);
-	messageBox->selectAll();
 	messageBox->setPalette(failureRed);
+	messageBox->selectAll();
 }

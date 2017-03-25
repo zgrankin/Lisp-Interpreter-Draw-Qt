@@ -2,6 +2,8 @@
 #define _ENVIRONMENT_HPP_
 
 #include <string>
+#include <vector>
+#include <tuple>
 #include <map>
 #include "expression.hpp"
 
@@ -16,6 +18,8 @@ public:
 	Atom findVar(std::string aString);
 
 	std::map<std::string, Atom> varMap;
+
+	vector< Atom > graphics;
 
 private:
 	
