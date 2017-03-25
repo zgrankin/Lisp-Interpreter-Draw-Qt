@@ -3,6 +3,7 @@
 #include "message_widget.hpp"
 #include "repl_widget.hpp"
 #include "qt_interpreter.hpp"
+#include "canvas_widget.hpp"
 
 #include <QWidget>
 
@@ -19,6 +20,7 @@ public:
 private:
 	MessageWidget * messageDisplay;
 	REPLWidget * replDisplay;
+	CanvasWidget * canvasDisplay;
 	QtInterpreter * intercept;
 
 };

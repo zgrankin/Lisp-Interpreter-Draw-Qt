@@ -2,6 +2,8 @@
 
 #include <QWidget>
 #include <QLayout>
+#include <QGraphicsScene>
+#include <QGraphicsView>
 
 MainWindow::MainWindow(QWidget * parent) {
 	setMinimumSize(800, 600);
@@ -10,9 +12,10 @@ MainWindow::MainWindow(QWidget * parent) {
 	auto layout = new QGridLayout(this);
 	messageDisplay = new MessageWidget(this);
 	replDisplay = new REPLWidget(this);
+	canvasDisplay = new CanvasWidget(this);
 	//textbox->info("hi");
+	layout->addWidget(canvasDisplay, 1, 0);
 	layout->addWidget(messageDisplay, 0, 0);
-
 	layout->addWidget(replDisplay, 2, 0);
 	setLayout(layout);
 

@@ -29,15 +29,3 @@ void QtInterpreter::parseAndEvaluate(QString entry)
 		emit error(QString("Error: could not parse input."));
 	}
 }
-
-	//if (vtscript.parse(ss)) {
-	//	try {
-	//		eval().outputFinalAnswer();
-	//	}
-	//	catch (InterpreterSemanticError &error) {
-	//		std::cerr << error.what() << std::endl;
-	//	}
-	//}
-	//else if (!cin.eof()) {
-	//	std::cerr << "Error: Parsing failed." << std::endl;
-	//}
