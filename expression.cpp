@@ -1,7 +1,11 @@
 #include "expression.hpp"
 #include "environment.hpp"
-
+#include <cmath>
+#include <limits>
 #include <iostream>
+
+
+bool almost_equal(double x, double y);
 
 Expression::Expression(): parent(nullptr)
 {
@@ -200,8 +204,41 @@ void Expression::defineMethod()
 		euthanizeChildren();
 	}
 	// project 2
+	else if (atom.var == "sin") {
+		if (children.size() == 1 && children[0]->atom.atomType == NumberType) {
+			atom.number = sin(children[0]->atom.number);
+			atom.atomType = NumberType;
+		}
+		else
+			throw InterpreterSemanticError("Error: Improper arguments for logic operator \"not\".");
+
+		euthanizeChildren();
+	}
+	else if (atom.var == "cos") {
+		if (children.size() == 1 && children[0]->atom.atomType == NumberType) {
+			atom.number = cos(children[0]->atom.number);
+			atom.atomType = NumberType;
+		}
+		else
+			throw InterpreterSemanticError("Error: Improper arguments for logic operator \"not\".");
+
+		euthanizeChildren();
+	}
+	else if (atom.var == "arctan") {
+		if (children.size() == 2 && children[0]->atom.atomType == NumberType && children[1]->atom.atomType == NumberType) {
+			atom.number = atan2(children[0]->atom.number, children[1]->atom.number);
+			atom.atomType = NumberType;
+		}
+		else
+			throw InterpreterSemanticError("Error: Improper arguments for logic operator \">=\".");
+
+		euthanizeChildren();
+	}
 	else if (atom.var == "point") {
-		if (children.size() == 2 && children[0]->atom.atomType == NumberType && children[1]->atom.atomType == NumberType)
+		if (atom.truthValue == true && parent != nullptr && parent->atom.var == "draw")
+				environment->graphics.push_back(atom);
+
+		else if (children.size() == 2 && children[0]->atom.atomType == NumberType && children[1]->atom.atomType == NumberType)
 		{
 			atom.point = make_tuple(children[0]->atom.number, children[1]->atom.number);
 			atom.atomType = PointType;
@@ -214,7 +251,10 @@ void Expression::defineMethod()
 		euthanizeChildren();
 	}
 	else if (atom.var == "line") {
-		if (children.size() == 2 && children[0]->atom.atomType == PointType && children[1]->atom.atomType == PointType)
+		if (atom.truthValue == true && parent != nullptr && parent->atom.var == "draw")
+			environment->graphics.push_back(atom);
+
+		else if (children.size() == 2 && children[0]->atom.atomType == PointType && children[1]->atom.atomType == PointType)
 		{
 			atom.point = children[0]->atom.point;
 			atom.point2 = children[1]->atom.point;
@@ -227,7 +267,10 @@ void Expression::defineMethod()
 		euthanizeChildren();
 	}
 	else if (atom.var == "arc") {
-		if (children.size() == 3 && children[0]->atom.atomType == PointType && children[1]->atom.atomType == PointType && children[2]->atom.atomType == NumberType)
+		if (atom.truthValue == true && parent != nullptr && parent->atom.var == "draw")
+			environment->graphics.push_back(atom);
+
+		else if (children.size() == 3 && children[0]->atom.atomType == PointType && children[1]->atom.atomType == PointType && children[2]->atom.atomType == NumberType)
 		{
 			atom.point = children[0]->atom.point;
 			atom.point2 = children[1]->atom.point;
@@ -336,7 +379,6 @@ Expression Expression::evaluateTree()
 
 		for (unsigned int i = 0; i < children.size(); i++) {
 			if (children[i]->atom.atomType == PointType || children[i]->atom.atomType == LineType || children[i]->atom.atomType == ArcType) {
-				if (children[i]->atom.truthValue != true)
 					children[i]->evaluateTree();
 			}
 			else {
@@ -392,8 +434,10 @@ bool Expression::operator==(const Expression & exp) const noexcept
 	if (atom.atomType == exp.atom.atomType && atom.atomType == BoolType)
 		return (atom.truthValue == exp.atom.truthValue && children.size() == exp.children.size());
 
-	else if (atom.atomType == exp.atom.atomType && atom.atomType == NumberType)
-		return (atom.number == exp.atom.number && children.size() == exp.children.size());
+	else if (atom.atomType == exp.atom.atomType && atom.atomType == NumberType) {
+
+		return (almost_equal(atom.number, exp.atom.number) && children.size() == exp.children.size());
+	}
 
 	else if (atom.atomType == exp.atom.atomType && atom.atomType == SymbolType)
 		return (atom.var == exp.atom.var && children.size() == exp.children.size());
@@ -416,4 +460,11 @@ void Expression::euthanizeChildren() {
 		delete children[0];
 		children.erase(children.begin());
 	}
+}
+
+bool almost_equal(double x, double y)
+{
+	// the machine epsilon has to be scaled to the magnitude of the values used
+	// and multiplied by the desired precision in ULPs (units in the last place)
+	return std::abs(x - y) < numeric_limits<double>::epsilon();
 }

@@ -64,6 +64,8 @@ public:
 	// type, atom value, and number of arguments
 	bool operator==(const Expression & exp) const noexcept;
 
+	//bool almost_equal(double x, double y);
+
 	void defineMethod();
 	
 	Expression evaluateTree();

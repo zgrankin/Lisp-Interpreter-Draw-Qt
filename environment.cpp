@@ -19,11 +19,14 @@ Environment::Environment() {
 	setVariable("*", atom);
 	setVariable("/", atom);
 
+	setVariable("sin", atom);
+	setVariable("cos", atom);
+	setVariable("arctan", atom);
+
 	Atom pi;
 	pi.atomType = NumberType;
 	pi.number = atan2(0, -1);
 	setVariable("pi", pi);
-	
 }
 
 bool Environment::setVariable(std::string aString, Atom envAtom)
