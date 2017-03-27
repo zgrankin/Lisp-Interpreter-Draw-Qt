@@ -251,10 +251,11 @@ void Expression::defineMethod()
 		euthanizeChildren();
 	}
 	else if (atom.var == "line") {
+		bool flag = false;
 		if (atom.truthValue == true && parent != nullptr && parent->atom.var == "draw")
-			environment->graphics.push_back(atom);
+			environment->graphics.push_back(atom); flag = true;
 
-		else if (children.size() == 2 && children[0]->atom.atomType == PointType && children[1]->atom.atomType == PointType)
+		if (children.size() == 2 && children[0]->atom.atomType == PointType && children[1]->atom.atomType == PointType)
 		{
 			atom.point = children[0]->atom.point;
 			atom.point2 = children[1]->atom.point;
@@ -262,15 +263,16 @@ void Expression::defineMethod()
 			if (parent != nullptr && parent->atom.var == "draw")
 				environment->graphics.push_back(atom);
 		}
-		else
+		else if (flag == false)
 			throw InterpreterSemanticError("Error: Improper arguments for making a line.");
 		euthanizeChildren();
 	}
 	else if (atom.var == "arc") {
+		bool flag = false;
 		if (atom.truthValue == true && parent != nullptr && parent->atom.var == "draw")
-			environment->graphics.push_back(atom);
+			environment->graphics.push_back(atom); flag = true;
 
-		else if (children.size() == 3 && children[0]->atom.atomType == PointType && children[1]->atom.atomType == PointType && children[2]->atom.atomType == NumberType)
+		if (children.size() == 3 && children[0]->atom.atomType == PointType && children[1]->atom.atomType == PointType && children[2]->atom.atomType == NumberType)
 		{
 			atom.point = children[0]->atom.point;
 			atom.point2 = children[1]->atom.point;
@@ -279,7 +281,7 @@ void Expression::defineMethod()
 			if (parent != nullptr && parent->atom.var == "draw")
 				environment->graphics.push_back(atom);
 		}
-		else
+		else if (flag == false)
 			throw InterpreterSemanticError("Error: Improper arguments for making a line.");
 		euthanizeChildren();
 	}
@@ -401,11 +403,6 @@ Expression Expression::evaluateTree()
 		}
 		defineMethod();
 	}
-
-	/*std::cout << "Number Result: " << atom.number << std::endl;
-	std::cout << "Bool Result: ";
-	if (atom.truthValue == true) std::cout << "True" << std::endl;
-	else std::cout << "False" << std::endl;*/
 
 	return *this;
 }

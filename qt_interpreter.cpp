@@ -62,6 +62,7 @@ void QtInterpreter::parseAndEvaluate(QString entry)
 						emit drawGraphic(graphic);
 					}
 				}
+				//vtscript.theEnvironment.graphics.clear();
 			}
 			emit info(QString(evaluatedExpression.c_str()));
 		}
