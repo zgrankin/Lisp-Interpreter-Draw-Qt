@@ -41,6 +41,7 @@ Expression::Expression(std::tuple<double, double> value)
 {
 	atom.atomType = PointType;
 	atom.point = value;
+	atom.truthValue = false;
 }
 
 Expression::Expression(std::tuple<double, double> start, std::tuple<double, double> end)
@@ -48,6 +49,7 @@ Expression::Expression(std::tuple<double, double> start, std::tuple<double, doub
 	atom.atomType = LineType;
 	atom.point = start;
 	atom.point2 = end;
+	atom.truthValue = false;
 }
 
 Expression::Expression(std::tuple<double, double> center, std::tuple<double, double> start, double angle)
@@ -56,196 +58,197 @@ Expression::Expression(std::tuple<double, double> center, std::tuple<double, dou
 	atom.point = center;
 	atom.point2 = start;
 	atom.number = angle;
+	atom.truthValue = false;
 }
 
 void Expression::defineMethod()
 {
-		if (atom.var == "+" && children.size() != 0) {
-			atom.number = 0;
-			for (unsigned int i = 0; i < children.size(); i++) {
-				if (children[i]->atom.atomType == NumberType) {
-					atom.number += children[i]->atom.number;
-					atom.atomType = NumberType;
-				}
-				else
-					throw InterpreterSemanticError("Error: Improper arguments for addition.");
-			}
-			euthanizeChildren();
-		}
-		else if (atom.var == "*" && children.size() != 0) {
-			atom.number = 1;
-			for (unsigned int i = 0; i < children.size(); i++) {
-				if (children[i]->atom.atomType == NumberType) {
-					atom.number *= children[i]->atom.number;
-					atom.atomType = NumberType;
-				}
-				else
-					throw InterpreterSemanticError("Error: Improper arguments for multiplication.");
-			}
-			euthanizeChildren();
-		}
-
-		else if (atom.var == "and" && children.size() != 0) {
-			atom.truthValue = true;
-			for (unsigned int i = 0; i < children.size(); i++) {
-				if (children[i]->atom.atomType == BoolType) {
-					atom.truthValue &= children[i]->atom.truthValue;
-					atom.atomType = BoolType;
-				}
-				else
-					throw InterpreterSemanticError("Error: Improper arguments for logic operator \"and\".");
-			}
-			euthanizeChildren();
-		}
-		else if (atom.var == "or" && children.size() != 0) {
-			atom.truthValue = false;
-			for (unsigned int i = 0; i < children.size(); i++) {
-				if (children[i]->atom.atomType == BoolType) {
-					atom.truthValue |= children[i]->atom.truthValue;
-					atom.atomType = BoolType;
-				}
-				else
-					throw InterpreterSemanticError("Error: Improper arguments for logic operator \"or\".");
-			}
-			euthanizeChildren();
-		}
-		else if (atom.var == "-") {
-			if (children.size() == 2 && children[0]->atom.atomType == NumberType && children[1]->atom.atomType == NumberType) {
-				atom.number = children[0]->atom.number - children[1]->atom.number;
-				atom.atomType = NumberType;
-
-			}
-			else if (children.size() == 1 && children[0]->atom.atomType == NumberType) {
-				atom.number = children[0]->atom.number * -1;
-				atom.atomType = NumberType;
-
-			}
-			else
-				throw InterpreterSemanticError("Error: Improper arguments for subtraction.");
-
-			euthanizeChildren();
-		}
-		else if (atom.var == "/") {
-			if (children.size() == 2 && children[0]->atom.atomType == NumberType && children[1]->atom.atomType == NumberType) {
-				atom.number = children[0]->atom.number / children[1]->atom.number;
+	if (atom.var == "+" && children.size() != 0) {
+		atom.number = 0;
+		for (unsigned int i = 0; i < children.size(); i++) {
+			if (children[i]->atom.atomType == NumberType) {
+				atom.number += children[i]->atom.number;
 				atom.atomType = NumberType;
 			}
 			else
-				throw InterpreterSemanticError("Error: Improper arguments for division.");
-
-			euthanizeChildren();
+				throw InterpreterSemanticError("Error: Improper arguments for addition.");
 		}
+		euthanizeChildren();
+	}
+	else if (atom.var == "*" && children.size() != 0) {
+		atom.number = 1;
+		for (unsigned int i = 0; i < children.size(); i++) {
+			if (children[i]->atom.atomType == NumberType) {
+				atom.number *= children[i]->atom.number;
+				atom.atomType = NumberType;
+			}
+			else
+				throw InterpreterSemanticError("Error: Improper arguments for multiplication.");
+		}
+		euthanizeChildren();
+	}
 
-		else if (atom.var == "<") {
-			if (children.size() == 2 && children[0]->atom.atomType == NumberType && children[1]->atom.atomType == NumberType) {
-				children[0]->atom.number < children[1]->atom.number ? atom.truthValue = true : atom.truthValue = false;
+	else if (atom.var == "and" && children.size() != 0) {
+		atom.truthValue = true;
+		for (unsigned int i = 0; i < children.size(); i++) {
+			if (children[i]->atom.atomType == BoolType) {
+				atom.truthValue &= children[i]->atom.truthValue;
 				atom.atomType = BoolType;
 			}
 			else
-				throw InterpreterSemanticError("Error: Improper arguments for logic operator \"<\".");
-
-			euthanizeChildren();
+				throw InterpreterSemanticError("Error: Improper arguments for logic operator \"and\".");
 		}
-		else if (atom.var == "<=") {
-			if (children.size() == 2 && children[0]->atom.atomType == NumberType && children[1]->atom.atomType == NumberType) {
-				children[0]->atom.number <= children[1]->atom.number ? atom.truthValue = true : atom.truthValue = false;
+		euthanizeChildren();
+	}
+	else if (atom.var == "or" && children.size() != 0) {
+		atom.truthValue = false;
+		for (unsigned int i = 0; i < children.size(); i++) {
+			if (children[i]->atom.atomType == BoolType) {
+				atom.truthValue |= children[i]->atom.truthValue;
 				atom.atomType = BoolType;
 			}
 			else
-				throw InterpreterSemanticError("Error: Improper arguments for logic operator \"<=\".");
+				throw InterpreterSemanticError("Error: Improper arguments for logic operator \"or\".");
+		}
+		euthanizeChildren();
+	}
+	else if (atom.var == "-") {
+		if (children.size() == 2 && children[0]->atom.atomType == NumberType && children[1]->atom.atomType == NumberType) {
+			atom.number = children[0]->atom.number - children[1]->atom.number;
+			atom.atomType = NumberType;
 
-			euthanizeChildren();
 		}
-		else if (atom.var == ">") {
-			if (children.size() == 2 && children[0]->atom.atomType == NumberType && children[1]->atom.atomType == NumberType) {
-				children[0]->atom.number > children[1]->atom.number ? atom.truthValue = true : atom.truthValue = false;
-				atom.atomType = BoolType;
-			}
-			else
-				throw InterpreterSemanticError("Error: Improper arguments for logic operator \">\".");
+		else if (children.size() == 1 && children[0]->atom.atomType == NumberType) {
+			atom.number = children[0]->atom.number * -1;
+			atom.atomType = NumberType;
 
-			euthanizeChildren();
 		}
-		else if (atom.var == ">=") {
-			if (children.size() == 2 && children[0]->atom.atomType == NumberType && children[1]->atom.atomType == NumberType) {
-				children[0]->atom.number >= children[1]->atom.number ? atom.truthValue = true : atom.truthValue = false;
-				atom.atomType = BoolType;
-			}
-			else
-				throw InterpreterSemanticError("Error: Improper arguments for logic operator \">=\".");
+		else
+			throw InterpreterSemanticError("Error: Improper arguments for subtraction.");
 
-			euthanizeChildren();
+		euthanizeChildren();
+	}
+	else if (atom.var == "/") {
+		if (children.size() == 2 && children[0]->atom.atomType == NumberType && children[1]->atom.atomType == NumberType) {
+			atom.number = children[0]->atom.number / children[1]->atom.number;
+			atom.atomType = NumberType;
 		}
-		else if (atom.var == "=") {
-			if (children.size() == 2 && children[0]->atom.atomType == NumberType && children[1]->atom.atomType == NumberType) {
-				children[0]->atom.number == children[1]->atom.number ? atom.truthValue = true : atom.truthValue = false;
-				atom.atomType = BoolType;
-			}
-			else
-				throw InterpreterSemanticError("Error: Improper arguments for logic operator \"=\".");
+		else
+			throw InterpreterSemanticError("Error: Improper arguments for division.");
 
-			euthanizeChildren();
-		}
-		else if (atom.var == "not") {
-			if (children.size() == 1 && children[0]->atom.atomType == BoolType) {
-				atom.truthValue = !children[0]->atom.truthValue;
-				atom.atomType = BoolType;
-			}
-			else
-				throw InterpreterSemanticError("Error: Improper arguments for logic operator \"not\".");
+		euthanizeChildren();
+	}
 
-			euthanizeChildren();
+	else if (atom.var == "<") {
+		if (children.size() == 2 && children[0]->atom.atomType == NumberType && children[1]->atom.atomType == NumberType) {
+			children[0]->atom.number < children[1]->atom.number ? atom.truthValue = true : atom.truthValue = false;
+			atom.atomType = BoolType;
 		}
-		// project 2
-		else if (atom.var == "point") {
-			if (children.size() == 2 && children[0]->atom.atomType == NumberType && children[1]->atom.atomType == NumberType)
-			{
-				atom.point = make_tuple(children[0]->atom.number, children[1]->atom.number);
-				atom.atomType = PointType;
-				if (parent != nullptr && parent->atom.var == "draw")
-					environment->graphics.push_back(atom);
-			}
-			else
-				throw InterpreterSemanticError("Error: Improper arguments for making a point.");
+		else
+			throw InterpreterSemanticError("Error: Improper arguments for logic operator \"<\".");
 
-			euthanizeChildren();
+		euthanizeChildren();
+	}
+	else if (atom.var == "<=") {
+		if (children.size() == 2 && children[0]->atom.atomType == NumberType && children[1]->atom.atomType == NumberType) {
+			children[0]->atom.number <= children[1]->atom.number ? atom.truthValue = true : atom.truthValue = false;
+			atom.atomType = BoolType;
 		}
-		else if (atom.var == "line") {
-			if (children.size() == 2 && children[0]->atom.atomType == PointType && children[1]->atom.atomType == PointType)
-			{
-				atom.point = children[0]->atom.point;
-				atom.point2 = children[1]->atom.point;
-				atom.atomType = LineType;
-				if (parent != nullptr && parent->atom.var == "draw")
-					environment->graphics.push_back(atom);
-			}
-			else
-				throw InterpreterSemanticError("Error: Improper arguments for making a line.");
-			euthanizeChildren();
+		else
+			throw InterpreterSemanticError("Error: Improper arguments for logic operator \"<=\".");
+
+		euthanizeChildren();
+	}
+	else if (atom.var == ">") {
+		if (children.size() == 2 && children[0]->atom.atomType == NumberType && children[1]->atom.atomType == NumberType) {
+			children[0]->atom.number > children[1]->atom.number ? atom.truthValue = true : atom.truthValue = false;
+			atom.atomType = BoolType;
 		}
-		else if (atom.var == "arc") {
-			if (children.size() == 3 && children[0]->atom.atomType == PointType && children[1]->atom.atomType == PointType && children[2]->atom.atomType == NumberType)
-			{
-				atom.point = children[0]->atom.point;
-				atom.point2 = children[1]->atom.point;
-				atom.number = children[2]->atom.number;
-				atom.atomType = ArcType;
-				if (parent != nullptr && parent->atom.var == "draw")
-					environment->graphics.push_back(atom);
-			}
-			else
-				throw InterpreterSemanticError("Error: Improper arguments for making a line.");
-			euthanizeChildren();
+		else
+			throw InterpreterSemanticError("Error: Improper arguments for logic operator \">\".");
+
+		euthanizeChildren();
+	}
+	else if (atom.var == ">=") {
+		if (children.size() == 2 && children[0]->atom.atomType == NumberType && children[1]->atom.atomType == NumberType) {
+			children[0]->atom.number >= children[1]->atom.number ? atom.truthValue = true : atom.truthValue = false;
+			atom.atomType = BoolType;
 		}
-		//
-		else if (atom.atomType == SymbolType)
+		else
+			throw InterpreterSemanticError("Error: Improper arguments for logic operator \">=\".");
+
+		euthanizeChildren();
+	}
+	else if (atom.var == "=") {
+		if (children.size() == 2 && children[0]->atom.atomType == NumberType && children[1]->atom.atomType == NumberType) {
+			children[0]->atom.number == children[1]->atom.number ? atom.truthValue = true : atom.truthValue = false;
+			atom.atomType = BoolType;
+		}
+		else
+			throw InterpreterSemanticError("Error: Improper arguments for logic operator \"=\".");
+
+		euthanizeChildren();
+	}
+	else if (atom.var == "not") {
+		if (children.size() == 1 && children[0]->atom.atomType == BoolType) {
+			atom.truthValue = !children[0]->atom.truthValue;
+			atom.atomType = BoolType;
+		}
+		else
+			throw InterpreterSemanticError("Error: Improper arguments for logic operator \"not\".");
+
+		euthanizeChildren();
+	}
+	// project 2
+	else if (atom.var == "point") {
+		if (children.size() == 2 && children[0]->atom.atomType == NumberType && children[1]->atom.atomType == NumberType)
 		{
-			atom = environment->findVar(atom.var);
-
-			euthanizeChildren();
-			if (atom.atomType == NoneType)
-				throw InterpreterSemanticError("Error: Unknown operation.");
+			atom.point = make_tuple(children[0]->atom.number, children[1]->atom.number);
+			atom.atomType = PointType;
+			if (parent != nullptr && parent->atom.var == "draw")
+				environment->graphics.push_back(atom);
 		}
+		else
+			throw InterpreterSemanticError("Error: Improper arguments for making a point.");
+
+		euthanizeChildren();
+	}
+	else if (atom.var == "line") {
+		if (children.size() == 2 && children[0]->atom.atomType == PointType && children[1]->atom.atomType == PointType)
+		{
+			atom.point = children[0]->atom.point;
+			atom.point2 = children[1]->atom.point;
+			atom.atomType = LineType;
+			if (parent != nullptr && parent->atom.var == "draw")
+				environment->graphics.push_back(atom);
+		}
+		else
+			throw InterpreterSemanticError("Error: Improper arguments for making a line.");
+		euthanizeChildren();
+	}
+	else if (atom.var == "arc") {
+		if (children.size() == 3 && children[0]->atom.atomType == PointType && children[1]->atom.atomType == PointType && children[2]->atom.atomType == NumberType)
+		{
+			atom.point = children[0]->atom.point;
+			atom.point2 = children[1]->atom.point;
+			atom.number = children[2]->atom.number;
+			atom.atomType = ArcType;
+			if (parent != nullptr && parent->atom.var == "draw")
+				environment->graphics.push_back(atom);
+		}
+		else
+			throw InterpreterSemanticError("Error: Improper arguments for making a line.");
+		euthanizeChildren();
+	}
+	//
+	else if (atom.atomType == SymbolType)
+	{
+		atom = environment->findVar(atom.var);
+
+		euthanizeChildren();
+		if (atom.atomType == NoneType)
+			throw InterpreterSemanticError("Error: Unknown operation.");
+	}
 }
 
 Expression Expression::evaluateTree()
@@ -268,7 +271,8 @@ Expression Expression::evaluateTree()
 		if (children.size() == 2 && children[0]->atom.atomType == SymbolType)
 		{
 			children[1]->evaluateTree();
-			if (children[1]->atom.atomType == BoolType || children[1]->atom.atomType == NumberType)
+			if (children[1]->atom.atomType == BoolType || children[1]->atom.atomType == NumberType || 
+				children[1]->atom.atomType == PointType || children[1]->atom.atomType == LineType || children[1]->atom.atomType == ArcType)
 				environment->setVariable(children[0]->atom.var, children[1]->atom);
 			atom = environment->findVar(children[0]->atom.var);
 
@@ -316,7 +320,14 @@ Expression Expression::evaluateTree()
 			throw InterpreterSemanticError("Error: Cannot evaluate.");
 
 		for (unsigned int i = 0; i < children.size(); i++) {
-			if (children[i]->atom.atomType != PointType && children[i]->atom.atomType != LineType && children[i]->atom.atomType != ArcType) 
+			if (children[i]->atom.atomType == SymbolType)
+			{
+				children[i]->atom = environment->findVar(children[i]->atom.var);
+				children[i]->atom.truthValue = true;
+				if (children[i]->atom.atomType == NoneType)
+					throw InterpreterSemanticError("Error: Unknown operation.");
+			}
+			else if (children[i]->atom.atomType != PointType && children[i]->atom.atomType != LineType && children[i]->atom.atomType != ArcType) 
 			{
 				euthanizeChildren();
 				throw InterpreterSemanticError("Error: Cannot evaluate.");
@@ -325,7 +336,8 @@ Expression Expression::evaluateTree()
 
 		for (unsigned int i = 0; i < children.size(); i++) {
 			if (children[i]->atom.atomType == PointType || children[i]->atom.atomType == LineType || children[i]->atom.atomType == ArcType) {
-				children[i]->evaluateTree();
+				if (children[i]->atom.truthValue != true)
+					children[i]->evaluateTree();
 			}
 			else {
 				euthanizeChildren();

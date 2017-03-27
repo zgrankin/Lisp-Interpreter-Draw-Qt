@@ -1,6 +1,7 @@
 #include "interpreter.hpp"
 #include "qt_interpreter.hpp"
 #include "interpreter_semantic_error.hpp"
+#include "qgraphics_arc_item.hpp"
 
 #include <string>
 #include <QPixmap>
@@ -55,8 +56,10 @@ void QtInterpreter::parseAndEvaluate(QString entry)
 					}
 					else if (vtscript.theEnvironment.graphics[i].atomType == ArcType) {
 						auto center = vtscript.theEnvironment.graphics[i].point;
-						auto start = vtscript.theEnvironment.graphics[i].point;
+						auto start = vtscript.theEnvironment.graphics[i].point2;
 						double radians = vtscript.theEnvironment.graphics[i].number;
+						QGraphicsArcItem * graphic = new QGraphicsArcItem(nullptr, center, start, radians);
+						emit drawGraphic(graphic);
 					}
 				}
 			}

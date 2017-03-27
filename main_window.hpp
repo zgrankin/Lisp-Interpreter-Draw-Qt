@@ -17,6 +17,8 @@ public:
 	// Default construct a MainWidow, using filename as the script file to attempt to preload
 	MainWindow(std::string filename, QWidget * parent = nullptr);
 
+	QString streamToQString(std::istream & expression);
+
 private:
 	MessageWidget * messageDisplay;
 	REPLWidget * replDisplay;

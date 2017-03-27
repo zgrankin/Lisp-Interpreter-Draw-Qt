@@ -44,7 +44,6 @@ string Interpreter::streamToString(std::istream & expression)
 	}
 
 	return finalExpression;
-
 	/*string tokenString;
 	char buffer[4096];
 	while (in.read(buffer, sizeof(buffer)))
