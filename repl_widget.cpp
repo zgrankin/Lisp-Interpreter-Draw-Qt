@@ -21,7 +21,6 @@ REPLWidget::REPLWidget(QWidget * parent) : QWidget(parent)
 	setLayout(layout);
 
 	QObject::connect(replBox, SIGNAL(returnPressed()), this, SLOT(replSignalHold()));
-	//QObject::connect(replBox, SIGNAL(keyPressEvent()), this, SLOT(keyPressSignalHold()));
 }
 
 void REPLWidget::replSignalHold()
@@ -35,7 +34,6 @@ void REPLWidget::replSignalHold()
 
 void REPLWidget::keyPressEvent(QKeyEvent *e)
 {
-	// Otherwise pass to the graphics view
 	if (e->key() == 0x01000013 && historyPosition < history.size()) { // up key Qt::Key_Up
 		if (historyPosition != history.size() - 1)
 			historyPosition++;

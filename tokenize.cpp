@@ -197,6 +197,7 @@ bool Tokenize::buildAST(vector<string> token)
 									  ArcType;
 				
 				tail->atom.var = token[pos];
+				tail->atom.truthValue = false;
 				pos++;
 				currentState = stateA;
 			}

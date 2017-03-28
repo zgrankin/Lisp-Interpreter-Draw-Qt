@@ -21,7 +21,6 @@ private:
 	tuple<double, double> start;
 	double angleRadians;
 	double angleDegrees;
-
 };
 
 #endif

@@ -6,7 +6,6 @@ int main(int argc, char *argv[])
 {
 	string expression;
 	string argument;
-	
 
 	if (argc == 3)
 	{
@@ -20,7 +19,8 @@ int main(int argc, char *argv[])
 
 			if (a.parse(ss)) {
 				try {
-					a.eval().outputFinalAnswer();
+					//a.eval().outputFinalAnswer();
+					cout << a.expressionToString(a.eval()) << endl;
 				}
 				catch (InterpreterSemanticError &error) {
 					std::cout << error.what() << std::endl;
@@ -43,7 +43,8 @@ int main(int argc, char *argv[])
 
 		if (a.parse(instream)) {
 			try {
-				a.eval().outputFinalAnswer();
+				//a.eval().outputFinalAnswer();
+				cout << a.expressionToString(a.eval()) << endl;
 			}
 			catch (InterpreterSemanticError &error) {
 				std::cout << error.what() << std::endl;
@@ -70,7 +71,8 @@ int main(int argc, char *argv[])
 
 			if (a.parse(ss)) {
 				try {
-					a.eval().outputFinalAnswer();
+					//a.eval().outputFinalAnswer();
+					cout << a.expressionToString(a.eval()) << endl;
 				}
 				catch (InterpreterSemanticError &error) {
 					std::cerr << error.what() << std::endl;

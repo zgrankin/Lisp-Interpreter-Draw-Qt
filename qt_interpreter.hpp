@@ -17,8 +17,6 @@ public:
 	// Default construct an QtInterpreter with the default environment and an empty AST
 	QtInterpreter(QObject * parent = nullptr);
 
-
-
 signals:
 	// a signal emitting an informational message
 	void info(QString message);

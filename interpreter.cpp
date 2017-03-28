@@ -10,7 +10,6 @@ Interpreter::Interpreter()
 	tree.environment = &theEnvironment;
 }
 
-
 bool Interpreter::parse(std::istream & expression) noexcept
 {
 	string tokenString = streamToString(expression);
@@ -105,7 +104,6 @@ string Interpreter::expressionToString(Expression result)
 			output = "(False)";
 		}
 	}
-	cout << output << endl;
 	return output;
 }
 

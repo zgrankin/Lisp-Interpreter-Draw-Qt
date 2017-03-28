@@ -9,11 +9,6 @@
 using std::get;
 using std::pow;
 
-//QGraphicsArcItem::QGraphicsArcItem(QGraphicsItem * parent)
-//{
-//
-//}
-
 QGraphicsArcItem::QGraphicsArcItem(QGraphicsItem * parent, tuple<double, double> point1, tuple<double, double> point2, double angle) {
 	center = point1;
 	start = point2;
@@ -23,7 +18,7 @@ QGraphicsArcItem::QGraphicsArcItem(QGraphicsItem * parent, tuple<double, double>
 
 void QGraphicsArcItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-	painter->drawArc(rect(), startAngle(), spanAngle());
+	painter->drawArc(rect(), startAngle(), spanAngle()); // not setting these beforehand will cause image to not display immediately
 }
 
 void QGraphicsArcItem::doSomeCalculationsAndJanxRelatedToArcs()

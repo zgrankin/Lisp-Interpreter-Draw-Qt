@@ -31,6 +31,7 @@ void QtInterpreter::parseAndEvaluate(QString entry)
 	if (parse == true) {
 		try {
 			evaluatedExpression = vtscript.expressionToString(vtscript.eval());
+			cout << evaluatedExpression;
 			if (evaluatedExpression == "(None)" && vtscript.theEnvironment.graphics.size() > 0) {
 				std::size_t SIZE = vtscript.theEnvironment.graphics.size();
 				for (int i = 0; i < SIZE; i++){
@@ -62,9 +63,10 @@ void QtInterpreter::parseAndEvaluate(QString entry)
 						emit drawGraphic(graphic);
 					}
 				}
-				//vtscript.theEnvironment.graphics.clear();
 			}
-			emit info(QString(evaluatedExpression.c_str()));
+			QString emitThis;
+			emitThis = emitThis.fromStdString(evaluatedExpression);
+			emit info(emitThis); // QString(evaluatedExpression.c_str())
 		}
 		catch (InterpreterSemanticError  &e) {
 			emit error(QString("Error: could not evaluate expression."));

@@ -9,7 +9,6 @@ bool almost_equal(double x, double y);
 
 Expression::Expression(): parent(nullptr)
 {
-
 	atom.atomType = NoneType;
 }
 
@@ -251,11 +250,10 @@ void Expression::defineMethod()
 		euthanizeChildren();
 	}
 	else if (atom.var == "line") {
-		bool flag = false;
 		if (atom.truthValue == true && parent != nullptr && parent->atom.var == "draw")
-			environment->graphics.push_back(atom); flag = true;
+			environment->graphics.push_back(atom); 
 
-		if (children.size() == 2 && children[0]->atom.atomType == PointType && children[1]->atom.atomType == PointType)
+		else if (children.size() == 2 && children[0]->atom.atomType == PointType && children[1]->atom.atomType == PointType)
 		{
 			atom.point = children[0]->atom.point;
 			atom.point2 = children[1]->atom.point;
@@ -263,16 +261,15 @@ void Expression::defineMethod()
 			if (parent != nullptr && parent->atom.var == "draw")
 				environment->graphics.push_back(atom);
 		}
-		else if (flag == false)
+		else
 			throw InterpreterSemanticError("Error: Improper arguments for making a line.");
 		euthanizeChildren();
 	}
 	else if (atom.var == "arc") {
-		bool flag = false;
 		if (atom.truthValue == true && parent != nullptr && parent->atom.var == "draw")
-			environment->graphics.push_back(atom); flag = true;
+			environment->graphics.push_back(atom);
 
-		if (children.size() == 3 && children[0]->atom.atomType == PointType && children[1]->atom.atomType == PointType && children[2]->atom.atomType == NumberType)
+		else if (children.size() == 3 && children[0]->atom.atomType == PointType && children[1]->atom.atomType == PointType && children[2]->atom.atomType == NumberType)
 		{
 			atom.point = children[0]->atom.point;
 			atom.point2 = children[1]->atom.point;
@@ -281,8 +278,8 @@ void Expression::defineMethod()
 			if (parent != nullptr && parent->atom.var == "draw")
 				environment->graphics.push_back(atom);
 		}
-		else if (flag == false)
-			throw InterpreterSemanticError("Error: Improper arguments for making a line.");
+		else
+			throw InterpreterSemanticError("Error: Improper arguments for making an arc.");
 		euthanizeChildren();
 	}
 	//
@@ -304,11 +301,12 @@ Expression Expression::evaluateTree()
 		for (unsigned int i = 0; i < children.size(); i++)
 			children[i]->evaluateTree();
 		
-		
 		atom.atomType = children[children.size() - 1]->atom.atomType;
 		atom.number = children[children.size() - 1]->atom.number;
 		atom.truthValue = children[children.size() - 1]->atom.truthValue;
 		atom.var = children[children.size() - 1]->atom.var;
+		atom.point = children[children.size() - 1]->atom.point;
+		atom.point2 = children[children.size() - 1]->atom.point2;
 
 		euthanizeChildren();
 	}
@@ -381,17 +379,14 @@ Expression Expression::evaluateTree()
 
 		for (unsigned int i = 0; i < children.size(); i++) {
 			if (children[i]->atom.atomType == PointType || children[i]->atom.atomType == LineType || children[i]->atom.atomType == ArcType) {
-					children[i]->evaluateTree();
-			}
-			else {
-				euthanizeChildren();
-				throw InterpreterSemanticError("Error: Cannot evaluate.");
-			}
+					children[i]->evaluateTree(); } else { euthanizeChildren(); throw InterpreterSemanticError("Error: Cannot evaluate."); }
 		}
 
 		atom.atomType = NoneType;
 		atom.var = "None";
 		atom.point = children[0]->atom.point;
+		atom.point2 = children[0]->atom.point2;
+		atom.number = children[0]->atom.number;
 
 		euthanizeChildren();
 	}
@@ -403,27 +398,7 @@ Expression Expression::evaluateTree()
 		}
 		defineMethod();
 	}
-
 	return *this;
-}
-
-void Expression::outputFinalAnswer()
-{
-	if (atom.atomType == NumberType)
-		cout << "(" << atom.number << ")" << endl;
-	
-	else if (atom.atomType == SymbolType)
-		cout << "(" << atom.var << ")" << endl;
-
-	else if (atom.atomType == BoolType)
-	{
-		if (atom.truthValue == true)
-			cout << "(" << "True" << ")" << endl;
-		else if (atom.truthValue == false)
-			cout << "(" << "False" << ")" << endl;
-	}
-		
-	
 }
 
 bool Expression::operator==(const Expression & exp) const noexcept
@@ -431,10 +406,8 @@ bool Expression::operator==(const Expression & exp) const noexcept
 	if (atom.atomType == exp.atom.atomType && atom.atomType == BoolType)
 		return (atom.truthValue == exp.atom.truthValue && children.size() == exp.children.size());
 
-	else if (atom.atomType == exp.atom.atomType && atom.atomType == NumberType) {
-
+	else if (atom.atomType == exp.atom.atomType && atom.atomType == NumberType)
 		return (almost_equal(atom.number, exp.atom.number) && children.size() == exp.children.size());
-	}
 
 	else if (atom.atomType == exp.atom.atomType && atom.atomType == SymbolType)
 		return (atom.var == exp.atom.var && children.size() == exp.children.size());
@@ -448,7 +421,7 @@ bool Expression::operator==(const Expression & exp) const noexcept
 	else if (atom.atomType == exp.atom.atomType && atom.atomType == ArcType)
 		return (atom.point == exp.atom.point && atom.point2 == exp.atom.point2 && atom.number == exp.atom.number &&
 			children.size() == exp.children.size());
-
+		
 	return false;
 }
 

@@ -9,7 +9,6 @@ class QLineEdit;
 class QLabel;
 class QLayout;
 
-
 class REPLWidget : public QWidget {
 Q_OBJECT
 
@@ -19,7 +18,6 @@ protected:
 public:
 	// Default construct a REPLWidget
 	REPLWidget(QWidget * parent = nullptr);
-
 
 signals:
 	// A signal that sends the current edited text as a QString when the return key is pressed.

@@ -14,9 +14,8 @@ MainWindow::MainWindow(QWidget * parent) {
 	messageDisplay = new MessageWidget(this);
 	replDisplay = new REPLWidget(this);
 	canvasDisplay = new CanvasWidget(this);
-	//textbox->info("hi");
-	layout->addWidget(canvasDisplay, 1, 0);
 	layout->addWidget(messageDisplay, 0, 0);
+	layout->addWidget(canvasDisplay, 1, 0);
 	layout->addWidget(replDisplay, 2, 0);
 	setLayout(layout);
 
@@ -36,9 +35,8 @@ MainWindow::MainWindow(std::string filename, QWidget * parent)
 	messageDisplay = new MessageWidget(this);
 	replDisplay = new REPLWidget(this);
 	canvasDisplay = new CanvasWidget(this);
-	//textbox->info("hi");
-	layout->addWidget(canvasDisplay, 1, 0);
 	layout->addWidget(messageDisplay, 0, 0);
+	layout->addWidget(canvasDisplay, 1, 0);
 	layout->addWidget(replDisplay, 2, 0);
 	setLayout(layout);
 
@@ -71,5 +69,4 @@ QString MainWindow::streamToQString(std::istream & expression)
 	qtFinalExpression = qtFinalExpression.fromStdString(finalExpression);
 
 	return qtFinalExpression;
-
 }
