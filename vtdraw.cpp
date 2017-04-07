@@ -6,31 +6,36 @@
 
 using namespace std;
 
-int main(int argc, char *argv[])
+int drawFile(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
+	string filename = argv[1];
+	MainWindow widget(filename);
+	widget.show();
+	return app.exec();
+}
 
+int drawNormal(int argc, char *argv[])
+{
+	QApplication app(argc, argv);
+	MainWindow widget;
+	widget.show();
+	return app.exec();
+}
+
+int main(int argc, char *argv[])
+{
 	if (argc == 2) {
-		string filename = argv[1];
-
-		MainWindow widget(filename);
-
-		widget.show();
-		return app.exec();
+		drawFile(argc, argv);
 	}
 
 	else if (argc == 1) {
-		MainWindow widget;
-		widget.show();
-		return app.exec();
+		drawNormal(argc, argv);
 	}
 
 	else {
 		cerr << "Error: Improper arguments for vtdraw." << endl;
 		return EXIT_FAILURE;
 	}
-
-	return app.exec();
-
-	return EXIT_SUCCESS;
 }
+

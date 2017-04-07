@@ -41,8 +41,9 @@ void REPLWidget::keyPressEvent(QKeyEvent *e)
 		replBox->setText(history[historyPosition]);
 	}
 	else if (e->key() == 0x01000015 && historyPosition < history.size()) { // down key Qt::Key_Down
-		if (historyPosition > 0)
+		if (historyPosition > 0) {
 			historyPosition--;
+		}
 		replBox->clear();
 		replBox->setText(history[historyPosition]);		
 	}

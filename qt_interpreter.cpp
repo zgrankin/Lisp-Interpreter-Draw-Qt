@@ -28,7 +28,7 @@ void QtInterpreter::parseAndEvaluate(QString entry)
 	parseThis = entry.toStdString();
 	std::istringstream ss(parseThis);
 	bool parse = vtscript.parse(ss);
-	if (parse == true) {
+	if (parse) {
 		try {
 			evaluatedExpression = vtscript.expressionToString(vtscript.eval());
 			cout << evaluatedExpression;

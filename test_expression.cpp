@@ -63,7 +63,6 @@ TEST_CASE("Test Expression M-ary Operators Invalid Input", "[interpreter]") {
 }
 
 TEST_CASE("Test Expression Binary Operators Invalid Input", "[interpreter]") {
-
 	std::string program = "(- True False)";
 	std::istringstream iss(program);
 	REQUIRE_THROWS_AS(runScript(program), InterpreterSemanticError);
@@ -71,7 +70,6 @@ TEST_CASE("Test Expression Binary Operators Invalid Input", "[interpreter]") {
 	REQUIRE_THROWS_AS(runScript(program), InterpreterSemanticError);
 	program = "(-)";
 	REQUIRE_THROWS_AS(runScript(program), InterpreterSemanticError);
-
 	program = "(/ True False)";
 	REQUIRE_THROWS_AS(runScript(program), InterpreterSemanticError);
 	program = "(/ 1 2 3)";
@@ -80,7 +78,6 @@ TEST_CASE("Test Expression Binary Operators Invalid Input", "[interpreter]") {
 	REQUIRE_THROWS_AS(runScript(program), InterpreterSemanticError);
 	program = "(/)";
 	REQUIRE_THROWS_AS(runScript(program), InterpreterSemanticError);
-
 	program = "(< 1 2 3)";
 	REQUIRE_THROWS_AS(runScript(program), InterpreterSemanticError);
 	program = "(< True False)";
@@ -89,7 +86,6 @@ TEST_CASE("Test Expression Binary Operators Invalid Input", "[interpreter]") {
 	REQUIRE_THROWS_AS(runScript(program), InterpreterSemanticError);
 	program = "(<)";
 	REQUIRE_THROWS_AS(runScript(program), InterpreterSemanticError);
-
 	program = "(<= 1 2 3)";
 	REQUIRE_THROWS_AS(runScript(program), InterpreterSemanticError);
 	program = "(<= True False)";
@@ -98,7 +94,6 @@ TEST_CASE("Test Expression Binary Operators Invalid Input", "[interpreter]") {
 	REQUIRE_THROWS_AS(runScript(program), InterpreterSemanticError);
 	program = "(<=)";
 	REQUIRE_THROWS_AS(runScript(program), InterpreterSemanticError);
-
 	program = "(> 1 2 3)";
 	REQUIRE_THROWS_AS(runScript(program), InterpreterSemanticError);
 	program = "(> True False)";
@@ -107,7 +102,6 @@ TEST_CASE("Test Expression Binary Operators Invalid Input", "[interpreter]") {
 	REQUIRE_THROWS_AS(runScript(program), InterpreterSemanticError);
 	program = "(>)";
 	REQUIRE_THROWS_AS(runScript(program), InterpreterSemanticError);
-
 	program = "(>= 1 2 3)";
 	REQUIRE_THROWS_AS(runScript(program), InterpreterSemanticError);
 	program = "(>= True False)";
@@ -116,7 +110,6 @@ TEST_CASE("Test Expression Binary Operators Invalid Input", "[interpreter]") {
 	REQUIRE_THROWS_AS(runScript(program), InterpreterSemanticError);
 	program = "(>=)";
 	REQUIRE_THROWS_AS(runScript(program), InterpreterSemanticError);
-
 	program = "(= 1 2 3)";
 	REQUIRE_THROWS_AS(runScript(program), InterpreterSemanticError);
 	program = "(= True False)";
@@ -125,11 +118,8 @@ TEST_CASE("Test Expression Binary Operators Invalid Input", "[interpreter]") {
 	REQUIRE_THROWS_AS(runScript(program), InterpreterSemanticError);
 	program = "(=)";
 	REQUIRE_THROWS_AS(runScript(program), InterpreterSemanticError);
-
 	Interpreter interp;
-
 	bool ok = interp.parse(iss);
-
 	REQUIRE(ok);
 }
 

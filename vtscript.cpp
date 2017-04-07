@@ -2,76 +2,83 @@
 #include <fstream>
 #include <string>
 
-int main(int argc, char *argv[])
+bool evaluateCommandLine(int argc, char *argv[])
 {
-	string expression;
-	string argument;
+	string expression, argument;
+	argument = argv[1];
+	if (argument == "-e") {
 
-	if (argc == 3)
-	{
-		argument = argv[1];
-		if (argument == "-e") {
+		expression = argv[2];
 
-			expression = argv[2];
-
-			std::istringstream ss(expression);
-			Interpreter a;
-
-			if (a.parse(ss)) {
-				try {
-					//a.eval().outputFinalAnswer();
-					cout << a.expressionToString(a.eval()) << endl;
-				}
-				catch (InterpreterSemanticError &error) {
-					std::cout << error.what() << std::endl;
-					return EXIT_FAILURE;
-				}
-			}
-			else {
-				std::cerr << "Error: Parsing failed." << std::endl;
-				return EXIT_FAILURE;
-			}
-		}
-	}
-
-	else if (argc == 2)
-	{		
-		std::string filename = argv[1];
-		std::ifstream instream(filename);
-		
+		std::istringstream ss(expression);
 		Interpreter a;
 
-		if (a.parse(instream)) {
+		if (a.parse(ss)) {
 			try {
-				//a.eval().outputFinalAnswer();
 				cout << a.expressionToString(a.eval()) << endl;
 			}
 			catch (InterpreterSemanticError &error) {
 				std::cout << error.what() << std::endl;
-				return EXIT_FAILURE;
+				return false;
 			}
 		}
 		else {
 			std::cerr << "Error: Parsing failed." << std::endl;
+			return false;
+		}
+	}
+	return true;
+}
+
+bool evaluateFile(int argc, char *argv[])
+{
+	std::string filename = argv[1];
+	std::ifstream instream(filename);
+
+	Interpreter a;
+
+	if (a.parse(instream)) {
+		try {
+			//a.eval().outputFinalAnswer();
+			cout << a.expressionToString(a.eval()) << endl;
+		}
+		catch (InterpreterSemanticError &error) {
+			std::cout << error.what() << std::endl;
+			return false;
+		}
+	}
+	else {
+		std::cerr << "Error: Parsing failed." << std::endl;
+		return false;
+	}
+	return true;
+}
+
+int main(int argc, char *argv[])
+{
+	string expression, argument;
+	if (argc == 3) {
+		if (!evaluateCommandLine(argc, argv)) {
 			return EXIT_FAILURE;
 		}
-
 	}
-	
+
+	else if (argc == 2) {
+		if (!evaluateFile(argc, argv)) {
+			return EXIT_FAILURE;
+		}
+	}
+
 	else if (argc == 1)
 	{
 		std::string b;
 		Interpreter a;
-		while (!cin.eof())
-		{
+		while (!cin.eof()) {
 			std::cout << "vtscript> ";
 			getline(cin, b);
-
 			std::istringstream ss(b);
-
 			if (a.parse(ss)) {
 				try {
-					//a.eval().outputFinalAnswer();
 					cout << a.expressionToString(a.eval()) << endl;
 				}
 				catch (InterpreterSemanticError &error) {
@@ -86,5 +93,6 @@ int main(int argc, char *argv[])
 	else {
 		std::cerr << "Error: Invalid Arguments." << std::endl;
 	}
+
 	return 0;
 }

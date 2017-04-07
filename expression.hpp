@@ -72,9 +72,30 @@ public:
 
 	void outputFinalAnswer();
 
+
+	
+	
+
 private:
 	void euthanizeChildren();
-	
+
+	void arithmeticMethods(bool &skipLast);
+
+	void booleanLogicMethods(bool &skipLast);
+
+	void comparisonOperatorMethods(bool &skipLast);
+
+	void trigMethods(bool &skipLast);
+
+	void drawMethods(bool &skipLast);
+
+	void setBeginAtom();
+
+	void setIfChild1();
+
+	void setIfChild2();
+
+	void setDrawAtom();
 };
 
 

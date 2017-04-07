@@ -283,7 +283,8 @@ void Tokenize::postEvalDestroy(Expression *temp)
 			delete temp->children[0];
 			temp->children.erase(temp->children.begin());
 		}
-		if (temp != nullptr)
+		if (temp != nullptr) {
 			delete temp;
+		}
 	}
 }
